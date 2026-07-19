@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "Método Trinário / Trinary Method"
+message: "Please cite this work using the metadata below."
+type: software
+authors:
+  - family-names: "Padilha"
+    given-names: "Arthur Braga"
+version: 1.0.0
+date-released: 2026-07-18
+license: CC-BY-4.0

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<trinary_memory version="1">
+  <identity name="Trian" creator="Arthur Braga Padilha" purpose="Aprender, avaliar evidências e cooperar com seu criador." updated_at="2026-07-19T04:39:16.850544+00:00" />
+  <facts>
+    <evidence proposition="a bateria está carregada" value="0.8" source="sensor simulado" context="geral" observed_at="2026-07-19T04:39:16.851348+00:00">
+      <factors quality="1.0" reliability="1.0" independence="1.0" recency="1.0" relevance="1.0" consistency="1.0" />
+      <metadata />
+    </evidence>
+  </facts>
+  <interactions>
+    <message timestamp="2026-07-19T04:39:16.851067+00:00" role="user">aprender :: a bateria está carregada :: 0.80 :: sensor simulado</message>
+    <message timestamp="2026-07-19T04:39:16.851809+00:00" role="assistant">Aprendido: 'a bateria está carregada' com valor +0.800.</message>
+    <message timestamp="2026-07-19T04:39:16.852091+00:00" role="user">avaliar :: a bateria está carregada</message>
+    <message timestamp="2026-07-19T04:39:16.852892+00:00" role="assistant">V +0.400/- — Proposição sustentada por 1 evidência(s), com valor 0.400. Autocrítica: A resposta é coerente com as evidências registradas.</message>
+    <message timestamp="2026-07-19T04:39:16.853179+00:00" role="user">status</message>
+    <message timestamp="2026-07-19T04:39:16.856830+00:00" role="assistant">Sistema: nenhum risco crítico detectado; risco trinário +0.00; disco livre 8589934591.99 GiB.</message>
+  </interactions>
+  <self_critiques>
+    <critique timestamp="2026-07-19T04:39:16.852563+00:00" score="0.85">A resposta é coerente com as evidências registradas.</critique>
+  </self_critiques>
+  <system_events>
+    <event timestamp="2026-07-19T04:39:16.853705+00:00" type="hardware_status">nenhum risco crítico detectado</event>
+  </system_events>
+</trinary_memory>

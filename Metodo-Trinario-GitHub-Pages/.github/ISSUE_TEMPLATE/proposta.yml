@@ -1,0 +1,20 @@
+name: Proposta / Proposal
+description: Proponha uma melhoria verificável / Propose a verifiable improvement
+title: "[Proposta] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema / Problem
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta / Proposal
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências e referências / Evidence and references
