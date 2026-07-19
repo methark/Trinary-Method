@@ -1,0 +1,7 @@
+{
+  "doctype": true,
+  "html_tag": true,
+  "css": true,
+  "javascript": true,
+  "localStorage": true
+}
