@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lógica Trinária E? — Formalização Matemática v2.0</title>
+<style>
+:root{
+  --bg:#f4f7fa; --paper:#ffffff; --ink:#17202a; --muted:#5f6b76;
+  --line:#cbd5df; --accent:#123a5a; --accent2:#2b6f8e; --soft:#eaf2f7;
+  --true:#176b3a; --false:#9b2c2c; --ind:#7a5a12;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#edf3f7 0,#f7f9fb 30%,#eef2f5 100%);
+  color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.58;}
+.page{max-width:1080px;margin:36px auto;background:var(--paper);
+  box-shadow:0 14px 42px rgba(20,45,65,.14);border:1px solid #dce4ea;}
+header{padding:58px 64px 40px;border-bottom:4px solid var(--accent);
+  background:linear-gradient(135deg,rgba(18,58,90,.04),rgba(43,111,142,.08)),#fff;}
+.kicker{color:var(--accent2);text-transform:uppercase;letter-spacing:.16em;font:700 12px Arial,sans-serif;}
+h1{font-size:42px;line-height:1.12;margin:12px 0 14px;color:var(--accent);}
+.subtitle{font-size:20px;color:#334b5c;max-width:840px;}
+.meta{margin-top:28px;font:14px Arial,sans-serif;color:var(--muted);}
+main{padding:42px 64px 64px}
+h2{color:var(--accent);margin-top:42px;padding-bottom:7px;border-bottom:1px solid var(--line);font-size:28px;}
+h3{color:#244f69;margin-top:28px;font-size:21px}
+h4{margin-bottom:6px}
+p{margin:10px 0 15px}
+.abstract,.definition,.theorem,.proof,.note,.warning{
+  border-left:5px solid var(--accent2);background:var(--soft);padding:18px 22px;margin:20px 0;}
+.theorem{border-left-color:var(--true);background:#eef8f1}
+.proof{border-left-color:#576574;background:#f4f6f8}
+.warning{border-left-color:var(--ind);background:#fff8e7}
+.note{border-left-color:#6b5b95;background:#f6f2fb}
+.verif{border-left:5px solid #2b6f8e;background:#eef6fa;padding:12px 20px;margin:14px 0;
+  font:13px Arial,sans-serif;color:#28536b;}
+.label{font:700 12px Arial,sans-serif;text-transform:uppercase;letter-spacing:.11em;color:#456;}
+.math{font-family:"Cambria Math","Times New Roman",serif;background:#f8fafc;
+  border:1px solid #dbe4ea;padding:12px 16px;margin:13px 0;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;margin:18px 0 28px;font-size:15px;}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:center;vertical-align:middle;}
+th{background:#e9f0f5;color:#173e58;font-family:Arial,sans-serif;}
+td:first-child,th:first-child{text-align:left}
+code{background:#eef2f5;padding:2px 5px;border-radius:3px;}
+.symbol{font-family:"Cambria Math","Times New Roman",serif;font-size:1.08em;}
+.t{color:var(--true);font-weight:bold}
+.f{color:var(--false);font-weight:bold}
+.e{color:var(--ind);font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0;}
+.card{border:1px solid var(--line);border-top:4px solid var(--accent2);padding:16px;background:#fbfdfe;}
+.card h4{margin:0 0 8px;color:var(--accent)}
+ol,ul{padding-left:24px}
+footer{border-top:1px solid var(--line);padding:30px 64px 44px;background:#f8fafb;color:#485763;}
+.small{font-size:13px;color:var(--muted)}
+.novo{display:inline-block;font:700 10px Arial,sans-serif;letter-spacing:.08em;
+  padding:2px 7px;border-radius:3px;background:#e3f4e9;color:var(--true);
+  border:1px solid #bfe3cc;text-transform:uppercase;vertical-align:middle;margin-left:8px;}
+@media(max-width:760px){.page{margin:0;border:0}
+  header,main,footer{padding-left:24px;padding-right:24px}
+  h1{font-size:34px}.grid{grid-template-columns:1fr}
+  table{font-size:13px}th,td{padding:7px}}
+@media print{body{background:#fff}.page{box-shadow:none;border:0;margin:0;max-width:none}
+  a{color:inherit;text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <div class="kicker">Proposta de sistema lógico formal · versão revisada</div>
+  <h1>Lógica Trinária E?</h1>
+  <div class="subtitle">Escala simétrica [−1, +1] com zero como incerteza genuína, camada evidencial por soma com média ponderada, semântica trivalente, diagnóstico computável, cálculo de inferência e resultados de verificação computacional</div>
+  <div class="meta"><strong>Autor:</strong> Arthur Braga Padilha &nbsp;·&nbsp; <strong>Versão 2.0</strong> — revisão da v1.0 com base em bateria de testes exaustivos (50.000+ fórmulas; enumeração completa de valorações)</div>
+</header>
+
+<main>
+<section class="abstract">
+  <div class="label">Resumo</div>
+  <p>Este texto formaliza a <strong>Lógica Trinária E?</strong> como um sistema em três camadas. A <strong>camada evidencial</strong> atribui a cada proposição um <em>balanço</em> em [−1, +1] calculado por <strong>soma com média ponderada</strong> das evidências disponíveis, junto com uma <em>massa</em> total de evidência. A <strong>camada semântica</strong> discretiza o balanço em três valores — <span class="f">F = −1</span>, <span class="e">E = 0</span>, <span class="t">V = +1</span> — com o zero representando incerteza genuína, ponto fixo da negação. A <strong>camada diagnóstica</strong> torna os metadados D (dados insuficientes) e C (conflito) <em>computáveis</em> a partir de balanço e massa, em vez de atribuídos manualmente.</p>
+  <p>Em relação à v1.0, esta versão: (i) adota a escala simétrica −1/0/+1 com negação por reflexão ¬x = −x; (ii) introduz a média ponderada como mecanismo gerador dos valores; (iii) reformula o Teorema 3 conforme apontado pela auditoria computacional; (iv) enuncia o teorema de ausência de tautologias; e (v) responde à questão de revisão de crenças deixada em aberto na Seção 11 da v1.0. Todos os resultados marcados com <span class="novo" style="margin-left:0">Verificado</span> foram confirmados por teste computacional exaustivo ou estatístico.</p>
+</section>
+
+<h2>1. Objetivo e escopo</h2>
+<p>O sistema responde a três perguntas, uma por camada:</p>
+<ol>
+  <li><strong>Quanto pesa a evidência?</strong> — balanço B(φ) ∈ [−1,+1] e massa M(φ) ≥ 0, via média ponderada.</li>
+  <li><strong>Qual é o estado semântico da proposição?</strong> — V, E ou F.</li>
+  <li><strong>Por que a avaliação está suspensa?</strong> — diagnóstico D, C ou I, agora derivável das duas primeiras camadas.</li>
+</ol>
+<p>A separação continua evitando transformar causas epistemológicas em valores de verdade: o núcleo lógico possui exatamente três valores. A novidade da v2.0 é que as causas de E deixam de ser apenas declaradas e passam a ser <em>calculadas</em>.</p>
+
+<h2>2. Linguagem formal</h2>
+<h3>2.1 Alfabeto</h3>
+<p>Seja <span class="symbol">Prop = {p₁,p₂,p₃,…}</span> um conjunto enumerável de variáveis proposicionais. A linguagem <span class="symbol">L<sub>E</sub></span> contém variáveis proposicionais, os conectivos <span class="symbol">¬, ∧, ∨, →, ↔</span> e parênteses auxiliares.</p>
+<h3>2.2 Formação</h3>
+<div class="definition">
+  <div class="label">Definição 1 — Fórmulas</div>
+  <div class="math">φ ::= p | ¬φ | (φ ∧ φ) | (φ ∨ φ) | (φ → φ) | (φ ↔ φ).</div>
+</div>
+
+<h2>3. Domínio semântico: a escala simétrica</h2>
+<div class="definition">
+  <div class="label">Definição 2 — Valores</div>
+  <div class="math">𝕍 = { −1, 0, +1 } &nbsp;=&nbsp; { F, E, V }</div>
+  <p>com a ordem informacional/verdade</p>
+  <div class="math">F &lt; E &lt; V, &nbsp;isto é, &nbsp;−1 &lt; 0 &lt; +1.</div>
+</div>
+
+<div class="grid">
+  <div class="card"><h4><span class="t">V = +1 — Verdadeiro</span></h4><p>O balanço da evidência autoriza aceitar a proposição.</p></div>
+  <div class="card"><h4><span class="e">E = 0 — E?</span></h4><p>Incerteza genuína: o zero é o ponto de equilíbrio da escala e o único ponto fixo da negação.</p></div>
+  <div class="card"><h4><span class="f">F = −1 — Falso</span></h4><p>O balanço da evidência autoriza rejeitar a proposição.</p></div>
+</div>
+
+<div class="note">
+  <div class="label">Por que −1/0/+1 em vez de 0/½/1</div>
+  <p>Na v1.0, a negação era ¬x = 1−x e E = ½. Na escala simétrica, a negação torna-se pura <strong>reflexão em torno do zero</strong>: ¬x = −x. As três propriedades desejadas saem da aritmética, sem estipulação: a involução ¬¬x = x é imediata (−(−x) = x); E é ponto fixo porque −0 = 0; e verdade e falsidade são espelhos exatos. Além disso, a escala passa a comportar a camada evidencial contínua da Seção 4, na qual +1 e −1 são evidência plena a favor e contra, e 0 é ausência ou anulação de evidência.</p>
+</div>
+<div class="verif">✔ Verificado: a recodificação é um isomorfismo exato da v1.0 pela função x ↦ 2x−1. Todas as tabelas, teoremas e resultados do núcleo lógico da v1.0 são preservados célula a célula.</div>
+
+<h2>4. Camada evidencial: soma com média ponderada <span class="novo">Nova na v2.0</span></h2>
+<p>Os valores da escala não são estipulados: eles <strong>resultam da agregação ponderada da evidência</strong>.</p>
+<div class="definition">
+  <div class="label">Definição 3 — Balanço e massa</div>
+  <p>Seja <span class="symbol">Ev(p) = {(w₁,e₁), …, (wₙ,eₙ)}</span> o conjunto de evidências relevantes para a proposição atômica p, onde cada <span class="symbol">eᵢ ∈ [−1,+1]</span> é a direção e intensidade da evidência e cada <span class="symbol">wᵢ &gt; 0</span> é o seu peso (confiabilidade, qualidade metodológica, independência da fonte). Definem-se:</p>
+  <div class="math">
+    B(p) = ( Σᵢ wᵢ·eᵢ ) / ( Σᵢ wᵢ ) &nbsp;&nbsp;∈ [−1,+1] &nbsp;&nbsp;(balanço — média ponderada)<br>
+    M(p) = Σᵢ wᵢ &nbsp;&nbsp;≥ 0 &nbsp;&nbsp;(massa — soma dos pesos)
+  </div>
+  <p>Convenção: se Ev(p) = ∅, então B(p) = 0 e M(p) = 0.</p>
+</div>
+
+<div class="definition">
+  <div class="label">Definição 4 — Discretização (valoração induzida)</div>
+  <p>Fixados um limiar de decisão <span class="symbol">θ ∈ (0,1)</span> e uma massa mínima <span class="symbol">m₀ &gt; 0</span>:</p>
+  <div class="math">
+    v(p) = +1 (V) &nbsp;se&nbsp; B(p) ≥ θ &nbsp;e&nbsp; M(p) ≥ m₀<br>
+    v(p) = −1 (F) &nbsp;se&nbsp; B(p) ≤ −θ &nbsp;e&nbsp; M(p) ≥ m₀<br>
+    v(p) = 0 (E) &nbsp;caso contrário.
+  </div>
+  <p>Valores de referência usados nos testes: θ = ⅓ e m₀ = 1. A exigência de massa mínima impede que uma única evidência fraca produza um veredito decidido: com uma só evidência de peso 0,3, obtém-se B = 1 mas M = 0,3 &lt; m₀, e o resultado permanece E.</p>
+</div>
+
+<div class="definition">
+  <div class="label">Definição 5 — Diagnóstico computável</div>
+  <p>Se v(p) = E, o metadado é derivado de B e M:</p>
+  <div class="math">
+    δ(p) = D &nbsp;(dados insuficientes) &nbsp;⇔&nbsp; M(p) &lt; m₀<br>
+    δ(p) = C &nbsp;(conflito) &nbsp;⇔&nbsp; M(p) ≥ m₀ &nbsp;e&nbsp; |B(p)| &lt; θ<br>
+    δ(p) = I &nbsp;(intangível) &nbsp;⇔&nbsp; não há procedimento admissível para gerar Ev(p) no enquadramento adotado.
+  </div>
+  <p>D e C deixam de ser rótulos manuais: <strong>pouca massa é falta de dados; muita massa que se anula na média é conflito.</strong> Apenas I permanece um juízo de enquadramento, pois diz respeito à inexistência do próprio procedimento de coleta.</p>
+</div>
+<div class="verif">✔ Verificado: conjunto vazio → E/D; conflito balanceado (2,+1) contra (2,−1) → B = 0, M = 4 → E/C; evidência consistente → V ou F; conflito assimétrico (3,+1) contra (1,−1) → B = 0,5 → V. Conflito simétrico acumulado por 100 evidências permanece E/C indefinidamente — acúmulo de contradição jamais vira verdade.</div>
+
+<div class="note">
+  <div class="label">Correspondência estrutural com Belnap</div>
+  <p>Os quadrantes (B, M) reproduzem os quatro estados informacionais de Belnap–Dunn: massa nula ↔ <em>None</em>; massa alta com balanço nulo ↔ <em>Both</em>; balanço decidido ↔ <em>True</em>/<em>False</em>. A v2.0 obtém a expressividade dos quatro valores <em>sem abandonar o núcleo de três valores</em>: a quarta distinção vive na camada evidencial, exatamente onde a Seção 11 da v1.0 conjeturava que ela deveria estar.</p>
+</div>
+
+<h2>5. Valorações e semântica composicional</h2>
+<div class="definition">
+  <div class="label">Definição 6 — Valoração</div>
+  <p>Uma valoração é uma função <span class="symbol">v: Prop → 𝕍</span> (induzida pela Definição 4 ou dada diretamente), estendida recursivamente pelas cláusulas abaixo.</p>
+</div>
+
+<h3>5.1 Negação — reflexão</h3>
+<div class="math">v(¬φ) = −v(φ).</div>
+<table>
+<thead><tr><th>φ</th><th>¬φ</th></tr></thead>
+<tbody>
+<tr><td class="t">+1</td><td class="f">−1</td></tr>
+<tr><td class="e">0</td><td class="e">0</td></tr>
+<tr><td class="f">−1</td><td class="t">+1</td></tr>
+</tbody>
+</table>
+
+<h3>5.2 Conjunção — mínimo</h3>
+<div class="math">v(φ∧ψ) = min(v(φ), v(ψ)).</div>
+<table>
+<thead><tr><th>φ ∧ ψ</th><th>+1</th><th>0</th><th>−1</th></tr></thead>
+<tbody>
+<tr><th>+1</th><td class="t">+1</td><td class="e">0</td><td class="f">−1</td></tr>
+<tr><th>0</th><td class="e">0</td><td class="e">0</td><td class="f">−1</td></tr>
+<tr><th>−1</th><td class="f">−1</td><td class="f">−1</td><td class="f">−1</td></tr>
+</tbody>
+</table>
+
+<h3>5.3 Disjunção — máximo</h3>
+<div class="math">v(φ∨ψ) = max(v(φ), v(ψ)).</div>
+<table>
+<thead><tr><th>φ ∨ ψ</th><th>+1</th><th>0</th><th>−1</th></tr></thead>
+<tbody>
+<tr><th>+1</th><td class="t">+1</td><td class="t">+1</td><td class="t">+1</td></tr>
+<tr><th>0</th><td class="t">+1</td><td class="e">0</td><td class="e">0</td></tr>
+<tr><th>−1</th><td class="t">+1</td><td class="e">0</td><td class="f">−1</td></tr>
+</tbody>
+</table>
+
+<h3>5.4 Implicação e bicondicional</h3>
+<div class="math">
+φ → ψ := ¬φ ∨ ψ, &nbsp;logo&nbsp; v(φ→ψ) = max(−v(φ), v(ψ)).<br>
+φ ↔ ψ := (φ→ψ) ∧ (ψ→φ).
+</div>
+<table>
+<thead><tr><th>φ → ψ</th><th>+1</th><th>0</th><th>−1</th></tr></thead>
+<tbody>
+<tr><th>+1</th><td class="t">+1</td><td class="e">0</td><td class="f">−1</td></tr>
+<tr><th>0</th><td class="t">+1</td><td class="e">0</td><td class="e">0</td></tr>
+<tr><th>−1</th><td class="t">+1</td><td class="t">+1</td><td class="t">+1</td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>φ ↔ ψ</th><th>+1</th><th>0</th><th>−1</th></tr></thead>
+<tbody>
+<tr><th>+1</th><td class="t">+1</td><td class="e">0</td><td class="f">−1</td></tr>
+<tr><th>0</th><td class="e">0</td><td class="e">0</td><td class="e">0</td></tr>
+<tr><th>−1</th><td class="f">−1</td><td class="e">0</td><td class="t">+1</td></tr>
+</tbody>
+</table>
+<div class="verif">✔ Verificado: as cinco tabelas são exatamente as geradas pelas definições aritméticas (−x, min, max), célula a célula, sem exceções.</div>
+
+<h3>5.5 Por que os conectivos não são eles próprios médias ponderadas</h3>
+<div class="warning">
+  <div class="label">Resultado de teste — limite da média ponderada</div>
+  <p>Testou-se computacionalmente usar a média ponderada diretamente como conectivo (com pesos de decisividade: a conjunção pesando a falsidade, a disjunção pesando a verdade). Dois resultados:</p>
+  <ol>
+    <li><strong>Positivo:</strong> a média ponderada de decisividade, seguida de discretização por limiar, reproduz exatamente as tabelas min/max acima — em 20 de 20 configurações testadas de limiar (0,15 a 0,6) e suavização (0,001 a 0,1). Ou seja, <strong>as tabelas da Seção 5 são a sombra discreta da agregação ponderada</strong>: min e max são o caso-limite estável da média com pesos de decisividade.</li>
+    <li><strong>Negativo:</strong> sem a discretização, a média ponderada contínua não serve como conectivo composicional: ela viola a conservatividade (v(V∧F) = −0,98 ≠ −1) e falha a associatividade em 20.000 de 20.000 triplas aleatórias — (a∧b)∧c ≠ a∧(b∧c).</li>
+  </ol>
+  <p>Conclusão de arquitetura: <strong>a média ponderada pertence à camada evidencial (agregação de evidências sobre átomos); min/max pertencem à camada lógica (composição de fórmulas)</strong>. Cada operação no lugar onde suas propriedades matemáticas a sustentam.</p>
+</div>
+
+<h2>6. Verdade lógica e consequência</h2>
+<div class="definition">
+  <div class="label">Definição 7 — Valor designado</div>
+  <div class="math">D = {+1}.</div>
+  <p>Uma fórmula é aceita apenas quando avaliada como V.</p>
+</div>
+<div class="definition">
+  <div class="label">Definição 8 — Consequência semântica</div>
+  <div class="math">Γ ⊨<sub>E</sub> φ ⇔ para toda valoração v, se v(γ)=+1 para todo γ∈Γ, então v(φ)=+1.</div>
+</div>
+<div class="definition">
+  <div class="label">Definição 9 — Validade</div>
+  <div class="math">⊨<sub>E</sub> φ ⇔ v(φ)=+1 para toda valoração v.</div>
+</div>
+
+<h2>7. Cálculo de inferência</h2>
+<p>Dedução natural com regras seguras para o valor designado, idênticas às da v1.0:</p>
+<div class="math">
+Estruturais — Identidade: Γ,φ ⊢ φ; Enfraquecimento; Corte.<br>
+∧I, ∧E₁, ∧E₂; ∨I₁, ∨I₂, ∨E; →I, →E (Modus Ponens).
+</div>
+<p>A negação é a reflexão v(¬φ) = −v(φ); não se adota a regra irrestrita φ,¬φ ⊢ ψ. A Regra E? diagnóstica permanece na camada operacional: se a avaliação de φ não pode ser justificada como V nem como F, registrar v(φ)=E e derivar δ(φ) pela Definição 5.</p>
+
+<h2>8. Propriedades formais</h2>
+
+<div class="theorem">
+  <div class="label">Teorema 1 — Conservatividade sobre o fragmento clássico</div>
+  <p>Se uma valoração atribui apenas +1 ou −1 às variáveis de φ, o valor de φ coincide com seu valor clássico.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>Por indução estrutural. A reflexão −x restrita a {−1,+1} é a negação clássica; min e max restritos a {−1,+1} são a conjunção e a disjunção clássicas; → e ↔ são definidos a partir delas. ∎</p>
+</div>
+<div class="verif">✔ Verificado: 50.000 fórmulas aleatórias × todas as valorações binárias — 0 divergências (concordância de 100% com a lógica clássica).</div>
+
+<div class="theorem">
+  <div class="label">Teorema 2 — Correção das regras principais</div>
+  <p>As regras de ∧, ∨ e Modus Ponens preservam o valor designado +1.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>Idêntica à v1.0, com min/max sobre {−1,0,+1}: min(+1,+1)=+1; min = +1 exige ambos +1; max(+1,x)=+1; e a linha +1 da tabela de → força v(ψ)=+1 quando v(φ)=v(φ→ψ)=+1. ∎</p>
+</div>
+<div class="verif">✔ Verificado por enumeração exaustiva: Modus Ponens, Modus Tollens, silogismo disjuntivo, silogismo hipotético e dilema construtivo — todos válidos, sem contraexemplos.</div>
+
+<div class="theorem">
+  <div class="label">Teorema 3 — Não trivialidade operacional (reformulado na v2.0)</div>
+  <p>(a) Nenhuma valoração satisfaz simultaneamente φ e ¬φ com valor designado; logo a regra de explosão jamais é acionável a partir de premissas efetivamente aceitas. (b) A forma material da explosão não é válida: <span class="symbol">⊭<sub>E</sub> (φ∧¬φ)→ψ</span>. (c) No protocolo evidencial, uma base conflitante produz E/C (massa alta, balanço nulo), e nenhuma fórmula arbitrária é autorizada.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova e nota de revisão</div>
+  <p>(a) v(φ)=+1 exige v(¬φ)=−1. (b) Contraexemplo: v(φ)=0, v(ψ)=−1 dá v((φ∧¬φ)→ψ) = max(−0, −1) = 0 ≠ +1. (c) Segue das Definições 3–5. <em>Nota:</em> o enunciado da v1.0 ("{φ,¬φ} ⊭<sub>E</sub> ψ") era incorreto sob a Definição 8: como nenhuma valoração satisfaz as premissas, a consequência vale <em>por vacuidade</em> — fato conhecido das semânticas com valor designado único. A auditoria computacional confirmou: 0 modelos das premissas em 9 valorações. O que o sistema garante não é o bloqueio semântico da explosão, e sim que ela nunca dispara (a) e que sua forma material não é lei (b). ∎</p>
+</div>
+
+<div class="theorem">
+  <div class="label">Teorema 4 — Ausência de tautologias <span class="novo">Novo na v2.0</span></div>
+  <p>Não existe fórmula φ com ⊨<sub>E</sub> φ. O conjunto de validades é vazio.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>O zero é ponto fixo de todos os conectivos: −0 = 0, min(0,0) = 0, max(0,0) = 0. Por indução estrutural, a valoração que atribui 0 a todas as variáveis atribui 0 a toda fórmula. Logo nenhuma fórmula vale +1 em todas as valorações. ∎</p>
+</div>
+<div class="note">
+  <div class="label">Leitura epistemológica</div>
+  <p>Este é o resultado estrutural mais forte do sistema e a expressão exata de sua postura: <strong>nada é verdadeiro de graça</strong>. A lógica não afirma nenhuma sentença por conta própria; ela apenas transmite aceitação de premissas para conclusões. Todo o poder inferencial clássico (Teorema 2) permanece — mas condicionado a premissas efetivamente aceitas. Em particular, o terceiro excluído p∨¬p e a não contradição ¬(p∧¬p) recebem 0 quando v(p)=0, valendo apenas no fragmento decidido.</p>
+</div>
+<div class="verif">✔ Verificado: 50.000 fórmulas aleatórias de profundidade 5 sob a valoração toda-zero — 100% resultaram em 0.</div>
+
+<div class="theorem">
+  <div class="label">Teorema 5 — Consistência sintática relativa</div>
+  <p>Se o cálculo clássico é consistente, o fragmento clássico da Lógica Trinária E? é consistente, e o cálculo completo não deriva todas as fórmulas.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>Pelo Teorema 1, uma contradição derivável no fragmento bivalente seria uma contradição clássica. Para a não trivialidade, tome v(p)=+1, v(q)=−1: pela correção, q não é derivável sem premissas. O Teorema 4 reforça: sem premissas, nada é derivável. ∎</p>
+</div>
+
+<div class="theorem">
+  <div class="label">Teorema 6 — Monotonicidade da consequência</div>
+  <p>Se Γ ⊨<sub>E</sub> φ e Γ⊆Δ, então Δ ⊨<sub>E</sub> φ.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>Toda valoração que satisfaz Δ satisfaz Γ. ∎</p>
+</div>
+<div class="verif">✔ Verificado: 1.220 casos amostrados com Γ ⊨ φ; 0 falhas após acréscimo de premissas. Atenção à distinção: a consequência <em>lógica</em> é monotônica; a camada <em>evidencial</em> (Seção 9) é revisável — nova evidência pode mudar v(p), e com isso o conjunto de premissas aceitas, sem contradizer este teorema.</p>
+</div>
+
+<div class="theorem">
+  <div class="label">Teorema 7 — Álgebra de Kleene e reescrita segura <span class="novo">Novo na v2.0</span></div>
+  <p>Valem como identidades de valor, em toda valoração: De Morgan, dupla negação, comutatividade, associatividade, idempotência, absorção e distributividade. A estrutura (𝕍, min, max, −x) é uma álgebra de Kleene.</p>
+</div>
+<div class="proof">
+  <div class="label">Prova</div>
+  <p>Propriedades padrão de reticulado distributivo totalmente ordenado com involução que inverte a ordem. ∎</p>
+</div>
+<div class="note">
+  <div class="label">Distinção fina revelada pelos testes</div>
+  <p>Essas leis valem como <em>igualdade de valores</em>, mas não como fórmulas válidas: ¬(p∧q) e ¬p∨¬q têm sempre o mesmo valor, porém o bicondicional entre elas recebe 0 quando p=q=0 (pois 0↔0 = 0). Consequência prática: <strong>simplificar e reescrever fórmulas por essas leis é sempre seguro</strong> — nenhum resultado muda —, ainda que as leis não sejam teoremas (não poderiam ser: pelo Teorema 4, nada é).</p>
+</div>
+<div class="verif">✔ Verificado por enumeração exaustiva (3² e 3³ valorações por lei): todas as identidades confirmadas.</div>
+
+<h2>9. Revisão de crenças: dinâmica evidencial <span class="novo">Nova na v2.0</span></h2>
+<p>A v1.0 deixava em aberto "como E/D migra para V ou F quando novos dados chegam". A camada evidencial responde: a chegada da evidência (wₙ₊₁, eₙ₊₁) atualiza o balanço por recomputação da média ponderada:</p>
+<div class="math">B' = ( M·B + wₙ₊₁·eₙ₊₁ ) / ( M + wₙ₊₁ ), &nbsp;&nbsp; M' = M + wₙ₊₁.</div>
+<p>Propriedades verificadas computacionalmente:</p>
+<table>
+<thead><tr><th>Propriedade da dinâmica</th><th>Teste</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td>E/D → V com dados consistentes: trajetória (0 evid.) E/D → (2 evid. de peso ½) V</td><td>Simulação passo a passo</td><td class="t">Confirmado</td></tr>
+<tr><td>Conflito simétrico permanece E/C para sempre (acúmulo não fabrica verdade)</td><td>100 evidências opostas</td><td class="t">Confirmado</td></tr>
+<tr><td>Monotonicidade evidencial: evidência ≥ balanço atual nunca reduz o balanço</td><td>20.000 casos aleatórios</td><td class="t">0 falhas</td></tr>
+<tr><td>Robustez (continuidade): perturbação ≤ 0,05 nas evidências altera o balanço em ≤ 0,045</td><td>5.000 conjuntos perturbados</td><td class="t">Confirmado</td></tr>
+</tbody>
+</table>
+<p>A última linha registra uma vantagem estrutural sobre o binário puro: pequenos erros de medição produzem pequenas variações de balanço, e só atravessam o limiar θ quando genuinamente relevantes. A escala contínua funciona como amortecedor entre o ruído do mundo e a decisão trivalente.</p>
+
+<h2>10. Protocolo de classificação epistemológica</h2>
+<ol>
+  <li><strong>Bem-formação:</strong> sintaxe e domínio definidos?</li>
+  <li><strong>Enquadramento:</strong> existe procedimento admissível para gerar evidência? Se não: E/I.</li>
+  <li><strong>Coleta:</strong> reunir Ev(p) com pesos justificados.</li>
+  <li><strong>Agregação:</strong> calcular B(p) e M(p) pela média ponderada.</li>
+  <li><strong>Avaliação:</strong> discretizar com θ e m₀ (Definição 4).</li>
+  <li><strong>Diagnóstico:</strong> se E, derivar D ou C pela Definição 5.</li>
+</ol>
+<table>
+<thead><tr><th>Condição observada</th><th>Balanço / Massa</th><th>Valor</th><th>Metadado</th></tr></thead>
+<tbody>
+<tr><td>Evidência suficiente a favor</td><td>B ≥ θ, M ≥ m₀</td><td class="t">V</td><td>—</td></tr>
+<tr><td>Evidência suficiente contra</td><td>B ≤ −θ, M ≥ m₀</td><td class="f">F</td><td>—</td></tr>
+<tr><td>Faltam dados decisivos</td><td>M &lt; m₀</td><td class="e">E</td><td>D</td></tr>
+<tr><td>Evidências fortes que se anulam</td><td>M ≥ m₀, |B| &lt; θ</td><td class="e">E</td><td>C</td></tr>
+<tr><td>Sem procedimento objetivo aplicável</td><td>Ev(p) indefinível</td><td class="e">E</td><td>I</td></tr>
+</tbody>
+</table>
+
+<h2>11. Testes comparativos</h2>
+
+<h3>11.1 Fato matemático</h3>
+<div class="math">φ₁: 2+2=4.</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado</th><th>Comentário</th></tr></thead>
+<tbody>
+<tr><td>Binário</td><td class="t">V</td><td>Classificação direta.</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="t">V (+1)</td><td>Prova dedutiva = evidência de peso máximo; B = +1, M ≫ m₀.</td></tr>
+</tbody>
+</table>
+
+<h3>11.2 Fato empírico ainda desconhecido</h3>
+<div class="math">φ₂: Existe exatamente uma civilização inteligente extraterrestre.</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado operacional</th><th>Comentário</th></tr></thead>
+<tbody>
+<tr><td>Binário</td><td>V ou F na realidade; valor atual não determinado</td><td>A suspensão não é codificada como valor.</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="e">E/D</td><td>Derivado, não declarado: M(φ₂) &lt; m₀.</td></tr>
+</tbody>
+</table>
+
+<h3>11.3 Enunciado mal especificado</h3>
+<div class="math">φ₃: Tudo é azul.</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado operacional</th><th>Comentário</th></tr></thead>
+<tbody>
+<tr><td>Binário</td><td>Exige interpretação prévia</td><td>O domínio de "tudo" precisa ser fixado.</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="e">E</td><td>Falha no passo 1 do protocolo (bem-formação); registrada antes da coleta.</td></tr>
+</tbody>
+</table>
+
+<h3>11.4 Condicional com antecedente falso</h3>
+<div class="math">φ₄: Se a casa é verde, então todos os objetos são vermelhos; fato: a casa não é verde.</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado</th><th>Comentário</th></tr></thead>
+<tbody>
+<tr><td>Binário</td><td class="t">V</td><td>Verdade material vacuosa.</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="t">V</td><td>v(−1 → x) = max(+1, x) = +1 para todo x. Verificado exaustivamente.</td></tr>
+</tbody>
+</table>
+
+<h3>11.5 Paradoxo autorreferente</h3>
+<div class="math">L: "Esta própria proposição é falsa." &nbsp;Equação semântica: x = ¬x, isto é, x = −x.</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado</th><th>Comentário</th></tr></thead>
+<tbody>
+<tr><td>Binário</td><td>Sem solução em {−1,+1}</td><td>x = −x não tem raiz em {−1,+1}.</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="e">E/C — solução única x = 0</td><td>Na escala simétrica, o Mentiroso vira uma equação com raiz única: o zero. O paradoxo não é resolvido; ele recebe um endereço formal estável.</td></tr>
+</tbody>
+</table>
+
+<h3>11.6 Concatenação acumulativa</h3>
+<div class="math">C ↔ ¬C com v(C) = 0: &nbsp;v(C↔¬C) = 0↔0 = 0 (E/C).</div>
+<table>
+<thead><tr><th>Sistema</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td>Binário ingênuo</td><td>Sem valoração estável</td></tr>
+<tr><td>Trinário E? v2.0</td><td class="e">E/C — verificado</td></tr>
+</tbody>
+</table>
+
+<h2>12. Comparação resumida</h2>
+<table>
+<thead><tr><th>Critério</th><th>Binário clássico</th><th>E? v1.0</th><th>E? v2.0</th></tr></thead>
+<tbody>
+<tr><td>Escala</td><td>{V, F}</td><td>{0, ½, 1}</td><td><strong>[−1,+1] contínua + {−1,0,+1} discreta</strong></td></tr>
+<tr><td>Origem dos valores</td><td>Estipulada</td><td>Estipulada</td><td><strong>Soma com média ponderada da evidência</strong></td></tr>
+<tr><td>Negação</td><td>Troca V/F</td><td>1−x</td><td><strong>Reflexão −x; E ponto fixo por aritmética</strong></td></tr>
+<tr><td>Diagnóstico D/C</td><td>—</td><td>Atribuído manualmente</td><td><strong>Computável de (B, M)</strong></td></tr>
+<tr><td>Fragmento decidido</td><td>Excelente</td><td>Idêntico ao clássico</td><td>Idêntico ao clássico (verificado, 100%)</td></tr>
+<tr><td>Tautologias</td><td>Infinitas</td><td>Nenhuma (não enunciado)</td><td><strong>Nenhuma — Teorema 4 explícito</strong></td></tr>
+<tr><td>Explosão</td><td>Presente</td><td>Teorema 3 tecnicamente incorreto</td><td><strong>Teorema 3 reformulado e correto</strong></td></tr>
+<tr><td>Revisão de crenças</td><td>—</td><td>Questão em aberto</td><td><strong>Dinâmica da Seção 9, testada</strong></td></tr>
+<tr><td>Robustez a ruído</td><td>Descontínua no limiar</td><td>—</td><td><strong>Contínua na camada evidencial (Lipschitz)</strong></td></tr>
+<tr><td>Expressividade Belnap (None/Both)</td><td>—</td><td>Sugerida como trabalho futuro</td><td><strong>Obtida via quadrantes (B, M)</strong></td></tr>
+</tbody>
+</table>
+
+<h2>13. Limitações e questões em aberto</h2>
+<ul>
+  <li>Os parâmetros θ e m₀ são convencionais; a robustez a 20 configurações foi verificada, mas critérios normativos para escolhê-los por domínio de aplicação (medicina, direito, engenharia) permanecem abertos.</li>
+  <li>A atribuição dos pesos wᵢ é o ponto de entrada do juízo humano no sistema; heurísticas de ponderação (independência de fontes, qualidade metodológica) precisam de formalização própria.</li>
+  <li>A média ponderada assume evidências aproximadamente independentes; evidências correlacionadas inflam a massa M e pedem correção (por exemplo, deflator de correlação).</li>
+  <li>A categoria I continua dependente do enquadramento epistemológico adotado.</li>
+  <li>A semântica é proposicional; a extensão de primeira ordem exigirá domínio, quantificadores (∀ como ínfimo, ∃ como supremo são os candidatos naturais na escala ordenada) e regras adicionais.</li>
+</ul>
+
+<h2>14. Veredito formal</h2>
+<div class="theorem">
+  <div class="label">Conclusão</div>
+  <p>A Lógica Trinária E? v2.0 é um sistema em três camadas: agregação evidencial por soma com média ponderada em [−1,+1], semântica trivalente {−1, 0, +1} com o zero como incerteza genuína e ponto fixo da negação, e diagnóstico D/C computável a partir de balanço e massa. O núcleo lógico é conservativo sobre a lógica clássica (verificado em 50.000 fórmulas, 100% de concordância), preserva Modus Ponens e as regras usuais (verificado exaustivamente), não possui tautologias (Teorema 4), é não trivial e monotônico na consequência, e revisável na evidência.</p>
+  <p>O ganho da v2.0 sobre a v1.0 é estrutural: os valores deixam de ser estipulados e passam a ser gerados; a indeterminação deixa de ser apenas rotulada e passa a ser explicada por duas grandezas mensuráveis — quanto se sabe (massa) e para onde pende o que se sabe (balanço). Além de aceitar, rejeitar ou suspender, o sistema agora informa <em>quanto falta</em> para decidir e <em>o que</em> impede a decisão.</p>
+</div>
+
+</main>
+<footer>
+  <p><strong>Autoria:</strong> Arthur Braga Padilha</p>
+  <p><strong>Data:</strong> 18 de julho de 2026</p>
+  <p class="small">Documento de proposta teórica. Versão formal 2.0 — revisão com escala simétrica [−1,+1], camada evidencial ponderada e correções da auditoria computacional (isomorfismo v1↔v2 verificado; 50.000 fórmulas por teste de conservatividade e ausência de tautologias; 20.000 casos de monotonicidade evidencial; 5.000 conjuntos de robustez; sementes fixas para reprodutibilidade).</p>
+</footer>
+</div>
+</body>
+</html>

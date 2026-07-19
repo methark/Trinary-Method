@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Método Trinário — versão consolidada e verificada: lógica epistêmica, graduada, contextual, diagnóstica e revisável, com bateria de testes computacionais." />
+  <title>Método Trinário — Versão Consolidada e Verificada</title>
+  <style>
+    :root {
+      --bg: #071015;
+      --panel: #0d1a21;
+      --panel-2: #12252e;
+      --text: #e8f0f3;
+      --muted: #9db0b8;
+      --accent: #52d6c7;
+      --accent-2: #88a9ff;
+      --negative: #ff7f8f;
+      --zero: #e4c96f;
+      --positive: #65e0a1;
+      --line: #24404b;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+      --radius: 20px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(82,214,199,.12), transparent 32%),
+        radial-gradient(circle at 80% 10%, rgba(136,169,255,.10), transparent 30%),
+        linear-gradient(180deg, #071015 0%, #08141a 45%, #071015 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7,16,21,.82);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner {
+      max-width: var(--max); margin: 0 auto; padding: 14px 22px;
+      display: flex; gap: 18px; justify-content: space-between; align-items: center;
+    }
+    .brand { font-weight: 800; letter-spacing: .03em; }
+    .brand span { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    nav a {
+      text-decoration: none; font-size: .86rem; color: var(--muted);
+      padding: 7px 10px; border-radius: 999px; transition: .2s ease;
+    }
+    nav a:hover { background: rgba(82,214,199,.10); color: var(--text); }
+    main { max-width: var(--max); margin: 0 auto; padding: 0 22px 80px; }
+    .hero { min-height: 82vh; display: grid; align-content: center; gap: 24px; padding: 88px 0 64px; }
+    .eyebrow {
+      width: fit-content; padding: 8px 12px;
+      border: 1px solid rgba(82,214,199,.28); background: rgba(82,214,199,.08);
+      color: var(--accent); border-radius: 999px; font-size: .82rem;
+      text-transform: uppercase; letter-spacing: .12em; font-weight: 700;
+    }
+    h1 {
+      margin: 0; font-size: clamp(3rem, 9vw, 7rem);
+      line-height: .92; letter-spacing: -.055em; max-width: 1000px;
+    }
+    .hero p { max-width: 850px; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.35rem); margin: 0; }
+    .hero-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+    .metric {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(18,37,46,.9), rgba(13,26,33,.9));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .metric strong { display: block; font-size: 1.45rem; margin-bottom: 4px; }
+    .metric span { color: var(--muted); font-size: .92rem; }
+    section { padding: 74px 0 10px; }
+    .section-head { display: grid; gap: 8px; margin-bottom: 28px; }
+    .kicker { color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; }
+    h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.8rem); letter-spacing: -.035em; line-height: 1.05; }
+    h3 { margin-top: 0; font-size: 1.3rem; }
+    .lead { color: var(--muted); max-width: 850px; font-size: 1.08rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .card {
+      background: linear-gradient(180deg, rgba(18,37,46,.92), rgba(13,26,33,.92));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+    }
+    .card p:last-child { margin-bottom: 0; }
+    .value-band { display: grid; grid-template-columns: 1fr 120px 1fr; gap: 10px; align-items: stretch; margin: 26px 0; }
+    .band {
+      border-radius: 18px; padding: 26px 20px; text-align: center; font-weight: 800;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .band small { display: block; margin-top: 8px; font-weight: 500; opacity: .82; }
+    .band.neg { background: rgba(255,127,143,.10); color: var(--negative); }
+    .band.zero { background: rgba(228,201,111,.11); color: var(--zero); }
+    .band.pos { background: rgba(101,224,161,.10); color: var(--positive); }
+    .formula {
+      padding: 20px 22px; margin: 16px 0;
+      border-left: 4px solid var(--accent);
+      background: rgba(82,214,199,.07);
+      border-radius: 0 16px 16px 0; overflow-x: auto;
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      font-size: 1.1rem; line-height: 1.7;
+    }
+    .formula .num, .formula .den { display: block; text-align: center; }
+    .formula .bar { border-top: 1px solid currentColor; display: block; margin: 4px 0; }
+    .note {
+      padding: 18px 20px;
+      border: 1px dashed rgba(136,169,255,.35);
+      background: rgba(136,169,255,.07);
+      color: #d8e2ff; border-radius: 16px;
+    }
+    .fix {
+      padding: 18px 20px;
+      border: 1px dashed rgba(228,201,111,.45);
+      background: rgba(228,201,111,.07);
+      color: #f3e6bd; border-radius: 16px;
+    }
+    .verif {
+      display: inline-block;
+      font-size: .74rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--positive);
+      background: rgba(101,224,161,.10);
+      border: 1px solid rgba(101,224,161,.35);
+      padding: 4px 10px; border-radius: 999px;
+      vertical-align: middle;
+    }
+    .corr {
+      display: inline-block;
+      font-size: .74rem; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--zero);
+      background: rgba(228,201,111,.10);
+      border: 1px solid rgba(228,201,111,.35);
+      padding: 4px 10px; border-radius: 999px;
+      vertical-align: middle;
+    }
+    table {
+      width: 100%; border-collapse: collapse; margin: 18px 0;
+      background: rgba(13,26,33,.72); border-radius: 16px; overflow: hidden;
+    }
+    th, td { padding: 13px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: rgba(82,214,199,.08); color: var(--accent); }
+    tr:last-child td { border-bottom: 0; }
+    td.pos { color: var(--positive); font-weight: 700; }
+    td.neg { color: var(--negative); font-weight: 700; }
+    td.zer { color: var(--zero); font-weight: 700; }
+    .steps { counter-reset: step; display: grid; gap: 14px; }
+    .step {
+      counter-increment: step;
+      display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: start;
+      padding: 18px; border-radius: 16px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .step::before {
+      content: counter(step);
+      display: grid; place-items: center;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(82,214,199,.13);
+      color: var(--accent); font-weight: 900;
+    }
+    .decision-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 18px; }
+    .pill {
+      padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08); color: var(--text); font-size: .92rem;
+    }
+    .arrow { color: var(--accent); font-weight: 900; }
+    .example {
+      border-left: 4px solid var(--accent-2);
+      background: rgba(136,169,255,.06);
+      padding: 20px; border-radius: 0 16px 16px 0;
+    }
+    .footer {
+      margin-top: 90px; padding: 32px 0 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .signature { color: var(--text); font-weight: 700; }
+    .print-btn {
+      position: fixed; right: 20px; bottom: 20px; z-index: 60;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(13,26,33,.92); color: var(--text);
+      border-radius: 999px; padding: 12px 16px; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) {
+      .hero-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .value-band { grid-template-columns: 1fr; }
+      nav { display: none; }
+      h1 { font-size: clamp(3rem, 18vw, 5.5rem); }
+    }
+    @media print {
+      .topbar, .print-btn { display: none; }
+      body { background: #fff; color: #111; }
+      .card, .metric, table { box-shadow: none; background: #fff; border-color: #bbb; }
+      .lead, .hero p, .metric span, .footer { color: #333; }
+      section { break-inside: avoid; }
+      main { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Método <span>Trinário</span></div>
+      <nav>
+        <a href="#origem">Origem</a>
+        <a href="#semantica">Semântica</a>
+        <a href="#diagnostico">Diagnóstico</a>
+        <a href="#evidencias">Evidências</a>
+        <a href="#conectivos">Conectivos</a>
+        <a href="#duelo">Duelo</a>
+        <a href="#nucleo">Núcleo</a>
+        <a href="#decisao">Decisão</a>
+        <a href="#aplicacoes">Aplicações</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">Versão consolidada · verificada por bateria computacional</div>
+      <h1>Método<br>Trinário</h1>
+      <p>
+        Uma lógica epistêmica, graduada, contextual, diagnóstica e revisável para decisões em ambientes com incerteza, conflito, dados incompletos e necessidade de atualização contínua — agora com cada mecanismo submetido a teste computacional e cada correção documentada.
+      </p>
+      <div class="hero-grid">
+        <div class="metric"><strong>−0,95 a +0,95</strong><span>Escala aberta à revisão, sem certeza absoluta. Fechamento algébrico e ausência de estado absorvente verificados.</span></div>
+        <div class="metric"><strong>0</strong><span>Estado legítimo de não saber. Ponto fixo da negação e bloqueador de inferências indevidas.</span></div>
+        <div class="metric"><strong>270.000+ casos</strong><span>Testes exaustivos e estatísticos: cenários evidenciais, propriedades algébricas, regras de inferência e duelo de arquiteturas.</span></div>
+      </div>
+    </header>
+
+    <section id="origem">
+      <div class="section-head">
+        <div class="kicker">1. Origem e finalidade</div>
+        <h2>Uma resposta prática ao limite binário</h2>
+        <p class="lead">O Método Trinário nasceu da necessidade de produzir decisões simples e eficazes sem reduzir toda avaliação a verdadeiro ou falso.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Problema</h3>
+          <p>Decisões binárias forçam conclusões mesmo quando as informações são insuficientes, contraditórias, ambíguas ou temporariamente incompletas.</p>
+        </div>
+        <div class="card">
+          <h3>Proposta</h3>
+          <p>Representar não apenas a direção da conclusão, mas também sua intensidade, cobertura, conflito, contexto e possibilidade de revisão.</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:18px">
+        Princípio central: <strong>não comprovado não é falso; não refutado não é verdadeiro; não saber é um estado legítimo.</strong>
+      </div>
+    </section>
+
+    <section id="semantica">
+      <div class="section-head">
+        <div class="kicker">2. Semântica fundamental</div>
+        <h2>Três regiões, infinitos graus internos</h2>
+        <p class="lead">A lógica é trinária por possuir três estados fundamentais: negativo, zero e positivo. Os campos negativo e positivo admitem gradação contínua.</p>
+      </div>
+      <div class="value-band">
+        <div class="band neg">−0,95 até &lt; −θ<small>Refutação graduada</small></div>
+        <div class="band zero">−θ a +θ<small>Região de indeterminação</small></div>
+        <div class="band pos">&gt; +θ até +0,95<small>Sustentação graduada</small></div>
+      </div>
+      <div class="formula">Para toda proposição avaliável φ: <strong>−0,95 ≤ v(φ) ≤ +0,95</strong>, com limiar de decisão θ (referência: θ = ⅓).</div>
+      <p class="lead">Os valores ±1 são excluídos porque representariam certeza absoluta, incompatível com uma lógica revisável.</p>
+      <div class="grid-2" style="margin-top:18px">
+        <div class="card">
+          <h3>Teto ±0,95 — fechamento <span class="verif">✔ Verificado</span></h3>
+          <p>As operações −x, mínimo e máximo nunca escapam do intervalo: 50.000 amostras aleatórias, zero violações. O teto é matematicamente estável.</p>
+        </div>
+        <div class="card">
+          <h3>Teto ±0,95 — sem estado absorvente <span class="verif">✔ Verificado</span></h3>
+          <p>Uma proposição no teto (0,95, massa alta) recebeu uma única evidência contrária e recuou para 0,782. Nenhuma crença fica imune à revisão — o teto cumpre exatamente a função fallibilista que o motiva.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="diagnostico">
+      <div class="section-head">
+        <div class="kicker">3. Diagnóstico do zero</div>
+        <h2>O zero precisa explicar sua causa</h2>
+        <p class="lead">Os seis diagnósticos foram mantidos — e três deles tornaram-se computáveis a partir das grandezas evidenciais da Seção 4, deixando de depender de rotulagem manual.</p>
+      </div>
+      <table>
+        <thead><tr><th>Código</th><th>Diagnóstico</th><th>Origem</th></tr></thead>
+        <tbody>
+          <tr><td>D₀</td><td>Causa ainda não classificada.</td><td>Estado inicial padrão</td></tr>
+          <tr><td>D₁</td><td>Ausência de dados.</td><td class="pos">Computável: n = 0</td></tr>
+          <tr><td>D₂</td><td>Dados insuficientes.</td><td class="pos">Computável: cobertura baixa, K baixo</td></tr>
+          <tr><td>D₃</td><td>Dados conflitantes.</td><td class="pos">Computável: K ≥ 0,5</td></tr>
+          <tr><td>D₄</td><td>Proposição ambígua, mal formulada ou semanticamente inadequada.</td><td>Juízo de bem-formação (anterior à coleta)</td></tr>
+          <tr><td>D₅</td><td>Dependência de condição ainda não resolvida.</td><td>Juízo de enquadramento</td></tr>
+        </tbody>
+      </table>
+      <div class="formula">Resposta completa: <strong>R(φ) = valor + diagnóstico + explicação</strong></div>
+    </section>
+
+    <section id="evidencias">
+      <div class="section-head">
+        <div class="kicker">4. Mecanismo de evidências</div>
+        <h2>Média ponderada, cobertura e conflito</h2>
+        <p class="lead">As resultantes positivas e negativas são agregadas por média ponderada em canais separados — e o teste comparativo mostrou que essa separação é a decisão de projeto mais importante do método.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Peso de cada evidência <span class="corr">Correção calibrada</span></h3>
+          <p>Os seis fatores foram mantidos, mas compostos por <strong>média geométrica</strong> em vez de produto simples. Teste: seis fatores de 0,8 em produto dão 0,262 — um encolhimento sistemático que puniria toda evidência multi-avaliada. A média geométrica devolve 0,8, preservando a escala e mantendo a propriedade de veto (qualquer fator nulo anula o peso).</p>
+          <div class="formula">peso = (qualidade × confiabilidade × independência × atualidade × pertinência × consistência)<sup>1/6</sup></div>
+        </div>
+        <div class="card">
+          <h3>Média ponderada por canal</h3>
+          <div class="formula">
+            <span class="num">w₁x₁ + w₂x₂ + ... + wₙxₙ</span>
+            <span class="bar"></span>
+            <span class="den">w₁ + w₂ + ... + wₙ</span>
+          </div>
+          <p>Aplicada separadamente às evidências favoráveis (M⁺) e aos módulos das contrárias (M⁻). Isso impede que grande quantidade de evidências fracas domine artificialmente poucas evidências fortes — propriedade confirmada no duelo da Seção 7.</p>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:18px">
+        <div class="card"><h3>M⁺ e M⁻</h3><p>Médias ponderadas por canal: medem a <em>força típica</em> da evidência de cada lado, imune à contagem bruta.</p></div>
+        <div class="card"><h3>Cobertura C± <span class="corr">Formalizada</span></h3><p>Instanciada para teste como função saturante da massa de cada canal: C(m) = m/(m+1). Vale 0 sem evidência, cresce com quantidade e diversidade, tende a 1. É a cobertura que carrega a informação de "quanto se investigou" — papel complementar ao da média.</p></div>
+        <div class="card"><h3>Conflito K <span class="verif">✔ Verificado</span></h3><p>20.000 amostras: K permanece em [0,1], é simétrico, vale exatamente 1 no empate E⁺ = E⁻ e 0 quando a evidência é unilateral. Medida de conflito graduada e bem-comportada.</p></div>
+      </div>
+      <div class="formula">E⁺ = M⁺ × C⁺ &nbsp;&nbsp;&nbsp; e &nbsp;&nbsp;&nbsp; E⁻ = M⁻ × C⁻</div>
+      <div class="formula">Resultante primária: <strong>R = E⁺ − E⁻</strong></div>
+      <div class="formula">
+        Índice de conflito K =
+        <span class="num">2 × menor valor entre E⁺ e E⁻</span>
+        <span class="bar"></span>
+        <span class="den">E⁺ + E⁻</span>
+      </div>
+      <div class="formula">Valor final: <strong>v(φ) = R × s</strong>, onde s ∈ (0,1] é a suficiência conservadora do domínio. <span class="verif" style="margin-left:8px">✔ Fórmula recuperada do exemplo</span></div>
+      <div class="note">A cadeia completa do exemplo da Seção 8 foi recomputada de ponta a ponta: E⁺ = 0,813 × 0,85 = 0,691; E⁻ = 0,509 × 0,45 = 0,229; R = 0,462; K = 2×0,229/0,920 = 0,498 ≈ 0,50; e o valor final 0,30 corresponde exatamente a R × s = 0,462 × 0,65. Todos os números do documento original conferem, e a fórmula do valor final — implícita no original — está agora explícita.</div>
+    </section>
+
+    <section id="conectivos">
+      <div class="section-head">
+        <div class="kicker">5. Conectivos lógicos</div>
+        <h2>Operações graduadas e prudentes</h2>
+        <p class="lead">A tabela original previa validação por testes formais. Os testes foram feitos: três operações confirmadas, duas corrigidas.</p>
+      </div>
+      <table>
+        <thead><tr><th>Operação</th><th>Regra consolidada</th><th>Resultado do teste</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Negação</td>
+            <td>v(¬φ) = −v(φ)</td>
+            <td class="pos">✔ Confirmada. Involução e ponto fixo no zero saem da aritmética.</td>
+          </tr>
+          <tr>
+            <td>Conjunção</td>
+            <td>mínimo entre os valores</td>
+            <td class="pos">✔ Confirmada. Associativa, comutativa, De Morgan e distributiva no contínuo — 50.000 amostras, zero falhas.</td>
+          </tr>
+          <tr>
+            <td>Disjunção</td>
+            <td>máximo entre os valores</td>
+            <td class="pos">✔ Confirmada. Mesmas propriedades, mesma verificação.</td>
+          </tr>
+          <tr>
+            <td>Implicação (uso inferencial)</td>
+            <td><strong>MP protegido:</strong> conclusão = min(premissa, regra) <em>somente se ambas &gt; 0</em>; caso contrário, 0</td>
+            <td class="zer">⚠ Corrigida. A regra ingênua min(premissa, regra) comete negação do antecedente: com premissa −0,7 e regra 0,9, concluía −0,7 — afirmando a negação da conclusão a partir de premissa refutada. A versão protegida devolve 0: premissa não sustentada não autoriza nada.</td>
+          </tr>
+          <tr>
+            <td>Equivalência</td>
+            <td><strong>↔ lógico:</strong> min(max(−a,b), max(−b,a)) (Kleene). A proximidade vira medida separada: sim(φ,ψ) = 0,95 − |v(φ)−v(ψ)|</td>
+            <td class="zer">⚠ Corrigida. A equivalência por proximidade viola o próprio bloqueio por zero do método: com v(φ) = v(ψ) = 0, ela declararia equivalência 0,95 entre duas incógnitas totais. O ↔ de Kleene devolve 0 — ignorância mútua não prova equivalência. A proximidade continua útil, mas como métrica de similaridade fora do cálculo lógico.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fix">
+        <strong>Regra de ouro extraída dos testes:</strong> na região positiva, os conectivos graduados funcionam como o esperado; toda patologia encontrada envolvia valores negativos ou o zero atravessando uma regra pensada para suporte positivo. A correção sistemática é uma só: <em>apenas sustentação positiva flui por inferência</em>.
+      </div>
+    </section>
+
+    <section id="inferencia">
+      <div class="section-head">
+        <div class="kicker">6. Regras de inferência</div>
+        <h2>Conclusões nunca mais fortes que suas bases</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><div><strong>Identidade</strong><br>Uma proposição preserva seu valor enquanto contexto e evidências não mudarem.</div></div>
+        <div class="step"><div><strong>Negação</strong><br>O valor muda apenas de sinal. <span class="verif">✔</span></div></div>
+        <div class="step"><div><strong>Modus ponens graduado e protegido</strong><br>conclusão = min(premissa, regra) se ambas positivas; senão 0. Não amplificação verificada em 50.000 casos: a conclusão jamais supera premissa ou regra. <span class="verif">✔</span></div></div>
+        <div class="step"><div><strong>Bloqueio por zero e por refutação</strong><br>Premissa em zero ou negativa não autoriza conclusão alguma — verificado sem exceções. <span class="verif">✔</span></div></div>
+        <div class="step"><div><strong>Não amplificação</strong><br>Nenhuma conclusão derivada supera a premissa ou regra essencial mais fraca. <span class="verif">✔</span></div></div>
+        <div class="step"><div><strong>Contradição não explosiva</strong><br>De φ e ¬φ não se conclui proposição arbitrária. Formulação precisa (herdada da auditoria do núcleo): nenhuma valoração aceita φ e ¬φ simultaneamente, logo a explosão jamais é acionável; a forma material (φ∧¬φ)→ψ não é lei; e conflito evidencial produz zero com D₃, nunca licença inferencial. <span class="verif">✔</span></div></div>
+        <div class="step"><div><strong>Revisabilidade</strong><br>Novas evidências podem fortalecer, enfraquecer ou inverter uma conclusão — dinâmica testada, incluindo a garantia de que conflito simétrico acumulado permanece em zero para sempre e jamais fabrica verdade. <span class="verif">✔</span></div></div>
+      </div>
+    </section>
+
+    <section id="duelo">
+      <div class="section-head">
+        <div class="kicker">7. Duelo de arquiteturas</div>
+        <h2>Canais separados vencem o balanço único</h2>
+        <p class="lead">A arquitetura desta apresentação (M⁺/M⁻ separados + cobertura + K) foi testada contra a arquitetura da formalização v2.0 (balanço único B com massa M) nos mesmos cenários evidenciais. Resultado: a separação de canais é superior no caso mais difícil.</p>
+      </div>
+      <table>
+        <thead><tr><th>Cenário</th><th>Balanço único (v2.0)</th><th>Canais separados (este método)</th><th>Veredito</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Quantidade × qualidade:</strong> 100 evidências fracas a favor (0,2) contra 1 evidência forte (0,9)</td>
+            <td class="neg">B = +0,19 — a contagem bruta arrasta o balanço para o lado fraco-numeroso</td>
+            <td class="pos">R = −0,25, K = 0,61 — a evidência forte pesa, e o conflito é sinalizado (D₃)</td>
+            <td class="pos">Canais separados</td>
+          </tr>
+          <tr>
+            <td><strong>Evidência única forte</strong> (peso 0,1)</td>
+            <td class="zer">E/D via guarda de massa</td>
+            <td class="zer">v = 0,09 → zero, D₂ (cobertura baixa)</td>
+            <td>Empate — cobertura generaliza a guarda de massa</td>
+          </tr>
+          <tr>
+            <td><strong>Conflito simétrico forte</strong></td>
+            <td class="zer">E/C (rótulo binário)</td>
+            <td class="zer">v = 0, K = 1,00 (conflito máximo, graduado)</td>
+            <td class="pos">Canais separados — K informa a intensidade</td>
+          </tr>
+          <tr>
+            <td><strong>Sem evidência</strong></td>
+            <td class="zer">E/D</td>
+            <td class="zer">v = 0, D₁ (ausência)</td>
+            <td>Empate — D₁ distingue ausência de insuficiência</td>
+          </tr>
+          <tr>
+            <td><strong>Consistente forte a favor</strong></td>
+            <td class="pos">V (B = 0,85)</td>
+            <td class="pos">V (v = 0,68)</td>
+            <td>Empate</td>
+          </tr>
+          <tr>
+            <td><strong>50 evidências fracas, nada contra</strong></td>
+            <td class="neg">Massa alta simula robustez (M = 50) e força o rótulo de conflito</td>
+            <td class="pos">v = 0,15 → zero, D₂ — fraqueza típica corretamente diagnosticada como insuficiência</td>
+            <td class="pos">Canais separados</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">
+        Síntese do duelo: <strong>a média por canal mede qualidade; a cobertura mede investigação; K mede conflito.</strong> O balanço único misturava as três coisas numa grandeza só — e por isso errava exatamente onde elas divergem. A arquitetura desta apresentação venceu; as correções da Seção 5 e o núcleo da Seção 8 vieram da formalização anterior. A versão consolidada é a união das duas.
+      </div>
+    </section>
+
+    <section id="nucleo">
+      <div class="section-head">
+        <div class="kicker">8. Núcleo formal herdado</div>
+        <h2>O que a camada trivalente garante</h2>
+        <p class="lead">Projetando o contínuo nas três regiões (com limiar θ), o método herda integralmente o núcleo trivalente já auditado — e a herança é legítima: a projeção comuta com os conectivos.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Projeção comuta com min/max <span class="verif">✔ 50.000 casos, 0 falhas</span></h3>
+          <p>Compor no contínuo e depois projetar dá o mesmo resultado que projetar e compor no trivalente. Consequência: todos os teoremas do núcleo valem para o método completo.</p>
+        </div>
+        <div class="card">
+          <h3>Conservatividade clássica <span class="verif">✔ 50.000 fórmulas</span></h3>
+          <p>No fragmento em que tudo está decidido, o método coincide com a lógica binária em 100% dos casos. O trinário não corrige o binário; ele o contém.</p>
+        </div>
+        <div class="card">
+          <h3>Ausência de tautologias <span class="verif">✔ 50.000 fórmulas</span></h3>
+          <p>O zero é ponto fixo de todos os conectivos; a valoração toda-zero dá zero a qualquer fórmula. Nada é verdadeiro de graça: toda aceitação exige premissas aceitas.</p>
+        </div>
+        <div class="card">
+          <h3>Regras corretas e consequência monotônica <span class="verif">✔ Exaustivo</span></h3>
+          <p>Modus Ponens, Modus Tollens, silogismos e dilema construtivo preservam o valor designado; acrescentar premissas nunca destrói consequências. A camada evidencial, por sua vez, é revisável — os dois níveis não se contradizem: a lógica transmite, a evidência atualiza.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="decisao">
+      <div class="section-head">
+        <div class="kicker">9. Valor lógico e decisão prática</div>
+        <h2>A lógica informa; a política decide</h2>
+        <p class="lead">Um valor positivo ou negativo não autoriza automaticamente uma ação. A decisão depende também de suficiência, conflito, risco, custo, reversibilidade e regras do domínio.</p>
+      </div>
+      <div class="decision-flow">
+        <span class="pill">Evidências</span><span class="arrow">→</span>
+        <span class="pill">Médias por canal</span><span class="arrow">→</span>
+        <span class="pill">Cobertura</span><span class="arrow">→</span>
+        <span class="pill">Conflito K</span><span class="arrow">→</span>
+        <span class="pill">v = R × s</span><span class="arrow">→</span>
+        <span class="pill">Valor trinário</span><span class="arrow">→</span>
+        <span class="pill">Política decisória</span><span class="arrow">→</span>
+        <span class="pill">Ação ou suspensão</span>
+      </div>
+      <div class="grid-3" style="margin-top:22px">
+        <div class="card"><h3>Aprovar</h3><p>Valor positivo suficiente, cobertura adequada, conflito aceitável e risco controlado.</p></div>
+        <div class="card"><h3>Rejeitar</h3><p>Valor negativo suficiente, cobertura adequada, conflito aceitável e política autorizadora.</p></div>
+        <div class="card"><h3>Suspender</h3><p>Valor na região do zero, baixa cobertura, conflito elevado, ambiguidade ou condição pendente.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">10. Exemplo completo — recomputado</div>
+        <h2>“O equipamento pode operar com segurança.”</h2>
+      </div>
+      <div class="example">
+        <p><strong>Média positiva M⁺:</strong> 0,813 &nbsp;·&nbsp; <strong>Cobertura C⁺:</strong> 0,85 &nbsp;→&nbsp; <strong>E⁺ = 0,691</strong> ✔</p>
+        <p><strong>Média negativa M⁻:</strong> 0,509 &nbsp;·&nbsp; <strong>Cobertura C⁻:</strong> 0,45 &nbsp;→&nbsp; <strong>E⁻ = 0,229</strong> ✔</p>
+        <p><strong>Resultante R = E⁺ − E⁻ = 0,462</strong> ✔</p>
+        <p><strong>Conflito K = 2 × 0,229 / 0,920 = 0,498 ≈ 0,50</strong> ✔</p>
+        <p><strong>Suficiência conservadora s = 0,65</strong> (domínio de segurança industrial)</p>
+        <p><strong>Valor final v = R × s = 0,462 × 0,65 = 0,30</strong> ✔</p>
+        <p><strong>Leitura trinária:</strong> v = 0,30 &lt; θ = ⅓ → região do zero, com K elevado → <strong>D₃ (conflito)</strong>.</p>
+        <p><strong>Decisão:</strong> não liberar automaticamente; investigar a vibração (fonte do canal negativo), elevar a cobertura C⁻ e repetir o teste. Toda a cadeia numérica do documento original foi confirmada por recomputação independente.</p>
+      </div>
+    </section>
+
+    <section id="aplicacoes">
+      <div class="section-head">
+        <div class="kicker">11. Aplicações práticas</div>
+        <h2>Onde o método pode superar a decisão binária</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card"><h3>Inteligência Artificial</h3><p>Permite declarar insuficiência, conflito e necessidade de novos dados em vez de inventar respostas.</p></div>
+        <div class="card"><h3>Medicina</h3><p>Separa evidência de diagnóstico, cobertura de exames, conflito clínico e decisão terapêutica.</p></div>
+        <div class="card"><h3>Direito</h3><p>Distingue prova favorável, prova contrária, insuficiência, conflito e limiares de decisão.</p></div>
+        <div class="card"><h3>Robótica</h3><p>Integra sensores com confiabilidades diferentes e evita ações quando a informação é inconsistente.</p></div>
+        <div class="card"><h3>Banco de dados</h3><p>Representa ausência de informação sem convertê-la automaticamente em falsidade — o mesmo comportamento de contenção do NULL trivalente, agora graduado.</p></div>
+        <div class="card"><h3>Ciência</h3><p>Formaliza hipóteses revisáveis, força das evidências, conflito experimental e suspensão de conclusão.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">12. Estado do projeto</div>
+        <h2>O que está fechado e o que vem a seguir</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Consolidado e verificado</h3>
+          <p>Escala com teto e regiões; significado do zero; seis diagnósticos com três computáveis; média ponderada por canal; cobertura formalizada; índice de conflito K; fórmula do valor final v = R × s; conectivos corrigidos (MP protegido, ↔ de Kleene); sete regras de inferência testadas; núcleo trivalente herdado com conservatividade, não explosão reformulada e ausência de tautologias.</p>
+        </div>
+        <div class="card">
+          <h3>Questões em aberto</h3>
+          <p>Critérios normativos por domínio para θ, s e a função de cobertura; correção de correlação entre evidências não independentes (evidências correlacionadas inflam a cobertura); calibração empírica dos seis fatores de peso; extensão de primeira ordem com quantificadores (∀ como ínfimo, ∃ como supremo são os candidatos naturais).</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <div class="signature">Autoria: Arthur Braga Padilha</div>
+        <div>Método Trinário — versão consolidada e verificada · síntese da apresentação formal com a formalização matemática v2.0, arbitrada por bateria de testes computacionais</div>
+      </div>
+      <div>18 de julho de 2026</div>
+    </footer>
+  </main>
+
+  <button class="print-btn" onclick="window.print()">Imprimir / PDF</button>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Apresentação formal do Método Trinário: lógica epistêmica, graduada, contextual, diagnóstica e revisável." />
+  <title>Método Trinário — Apresentação Formal</title>
+  <style>
+    :root {
+      --bg: #071015;
+      --panel: #0d1a21;
+      --panel-2: #12252e;
+      --text: #e8f0f3;
+      --muted: #9db0b8;
+      --accent: #52d6c7;
+      --accent-2: #88a9ff;
+      --negative: #ff7f8f;
+      --zero: #e4c96f;
+      --positive: #65e0a1;
+      --line: #24404b;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+      --radius: 20px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(82,214,199,.12), transparent 32%),
+        radial-gradient(circle at 80% 10%, rgba(136,169,255,.10), transparent 30%),
+        linear-gradient(180deg, #071015 0%, #08141a 45%, #071015 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7,16,21,.82);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      gap: 18px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand { font-weight: 800; letter-spacing: .03em; }
+    .brand span { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    nav a {
+      text-decoration: none;
+      font-size: .86rem;
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      transition: .2s ease;
+    }
+    nav a:hover { background: rgba(82,214,199,.10); color: var(--text); }
+    main { max-width: var(--max); margin: 0 auto; padding: 0 22px 80px; }
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-content: center;
+      gap: 24px;
+      padding: 88px 0 64px;
+    }
+    .eyebrow {
+      width: fit-content;
+      padding: 8px 12px;
+      border: 1px solid rgba(82,214,199,.28);
+      background: rgba(82,214,199,.08);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 700;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: .92;
+      letter-spacing: -.055em;
+      max-width: 1000px;
+    }
+    .hero p {
+      max-width: 850px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      margin: 0;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .metric {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(18,37,46,.9), rgba(13,26,33,.9));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .metric strong { display: block; font-size: 1.45rem; margin-bottom: 4px; }
+    .metric span { color: var(--muted); font-size: .92rem; }
+    section { padding: 74px 0 10px; }
+    .section-head { display: grid; gap: 8px; margin-bottom: 28px; }
+    .kicker { color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; }
+    h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.8rem); letter-spacing: -.035em; line-height: 1.05; }
+    h3 { margin-top: 0; font-size: 1.3rem; }
+    .lead { color: var(--muted); max-width: 850px; font-size: 1.08rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .card {
+      background: linear-gradient(180deg, rgba(18,37,46,.92), rgba(13,26,33,.92));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .card p:last-child { margin-bottom: 0; }
+    .value-band {
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr;
+      gap: 10px;
+      align-items: stretch;
+      margin: 26px 0;
+    }
+    .band {
+      border-radius: 18px;
+      padding: 26px 20px;
+      text-align: center;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .band small { display: block; margin-top: 8px; font-weight: 500; opacity: .82; }
+    .band.neg { background: rgba(255,127,143,.10); color: var(--negative); }
+    .band.zero { background: rgba(228,201,111,.11); color: var(--zero); }
+    .band.pos { background: rgba(101,224,161,.10); color: var(--positive); }
+    .formula {
+      padding: 20px 22px;
+      margin: 16px 0;
+      border-left: 4px solid var(--accent);
+      background: rgba(82,214,199,.07);
+      border-radius: 0 16px 16px 0;
+      overflow-x: auto;
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .formula .num, .formula .den { display: block; text-align: center; }
+    .formula .bar { border-top: 1px solid currentColor; display: block; margin: 4px 0; }
+    .note {
+      padding: 18px 20px;
+      border: 1px dashed rgba(136,169,255,.35);
+      background: rgba(136,169,255,.07);
+      color: #d8e2ff;
+      border-radius: 16px;
+    }
+    table {
+      width: 100%; border-collapse: collapse; margin: 18px 0;
+      background: rgba(13,26,33,.72); border-radius: 16px; overflow: hidden;
+    }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: rgba(82,214,199,.08); color: var(--accent); }
+    tr:last-child td { border-bottom: 0; }
+    .steps { counter-reset: step; display: grid; gap: 14px; }
+    .step {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .step::before {
+      content: counter(step);
+      display: grid; place-items: center;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(82,214,199,.13);
+      color: var(--accent); font-weight: 900;
+    }
+    .decision-flow {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      margin-top: 18px;
+    }
+    .pill {
+      padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08); color: var(--text); font-size: .92rem;
+    }
+    .arrow { color: var(--accent); font-weight: 900; }
+    .example {
+      border-left: 4px solid var(--accent-2);
+      background: rgba(136,169,255,.06);
+      padding: 20px;
+      border-radius: 0 16px 16px 0;
+    }
+    .footer {
+      margin-top: 90px;
+      padding: 32px 0 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .signature { color: var(--text); font-weight: 700; }
+    .print-btn {
+      position: fixed; right: 20px; bottom: 20px; z-index: 60;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(13,26,33,.92); color: var(--text);
+      border-radius: 999px; padding: 12px 16px; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) {
+      .hero-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .value-band { grid-template-columns: 1fr; }
+      nav { display: none; }
+      h1 { font-size: clamp(3rem, 18vw, 5.5rem); }
+    }
+    @media print {
+      .topbar, .print-btn { display: none; }
+      body { background: #fff; color: #111; }
+      .card, .metric, table { box-shadow: none; background: #fff; border-color: #bbb; }
+      .lead, .hero p, .metric span, .footer { color: #333; }
+      section { break-inside: avoid; }
+      main { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Método <span>Trinário</span></div>
+      <nav>
+        <a href="#origem">Origem</a>
+        <a href="#semantica">Semântica</a>
+        <a href="#evidencias">Evidências</a>
+        <a href="#conectivos">Conectivos</a>
+        <a href="#inferencia">Inferência</a>
+        <a href="#decisao">Decisão</a>
+        <a href="#aplicacoes">Aplicações</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">Apresentação formal — versão consolidada</div>
+      <h1>Método<br>Trinário</h1>
+      <p>
+        Uma lógica epistêmica, graduada, contextual, diagnóstica e revisável para decisões em ambientes com incerteza, conflito, dados incompletos e necessidade de atualização contínua.
+      </p>
+      <div class="hero-grid">
+        <div class="metric"><strong>−0,95 a +0,95</strong><span>Escala aberta à revisão, sem verdade ou falsidade absolutas.</span></div>
+        <div class="metric"><strong>0</strong><span>Estado de não saber, dados insuficientes, conflito ou formulação inadequada.</span></div>
+        <div class="metric"><strong>Média ponderada</strong><span>Agregação das resultantes positivas e negativas sem contagem bruta artificial.</span></div>
+      </div>
+    </header>
+
+    <section id="origem">
+      <div class="section-head">
+        <div class="kicker">1. Origem e finalidade</div>
+        <h2>Uma resposta prática ao limite binário</h2>
+        <p class="lead">O Método Trinário nasceu da necessidade de produzir decisões simples e eficazes sem reduzir toda avaliação a verdadeiro ou falso.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Problema</h3>
+          <p>Decisões binárias forçam conclusões mesmo quando as informações são insuficientes, contraditórias, ambíguas ou temporariamente incompletas.</p>
+        </div>
+        <div class="card">
+          <h3>Proposta</h3>
+          <p>Representar não apenas a direção da conclusão, mas também sua intensidade, cobertura, conflito, contexto e possibilidade de revisão.</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:18px">
+        Princípio central: <strong>não comprovado não é falso; não refutado não é verdadeiro; não saber é um estado legítimo.</strong>
+      </div>
+    </section>
+
+    <section id="semantica">
+      <div class="section-head">
+        <div class="kicker">2. Semântica fundamental</div>
+        <h2>Três regiões, infinitos graus internos</h2>
+        <p class="lead">A lógica é trinária por possuir três estados fundamentais: negativo, zero e positivo. Os campos negativo e positivo admitem gradação.</p>
+      </div>
+      <div class="value-band">
+        <div class="band neg">−0,95 até &lt; 0<small>Refutação graduada</small></div>
+        <div class="band zero">0<small>Indeterminação</small></div>
+        <div class="band pos">&gt; 0 até +0,95<small>Sustentação graduada</small></div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><h3>Negativo</h3><p>As evidências favorecem a negação da proposição. Quanto mais próximo de −0,95, mais forte a refutação.</p></div>
+        <div class="card"><h3>Zero</h3><p>O sistema suspende a conclusão. Pode significar ausência, insuficiência, conflito, ambiguidade ou condição pendente.</p></div>
+        <div class="card"><h3>Positivo</h3><p>As evidências favorecem a proposição. Quanto mais próximo de +0,95, mais forte a sustentação.</p></div>
+      </div>
+      <div class="formula">Para toda proposição avaliável φ: <strong>−0,95 ≤ v(φ) ≤ +0,95</strong></div>
+      <p class="lead">Os valores ±1 são excluídos porque representariam certeza absoluta, incompatível com uma lógica revisável.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">3. Diagnóstico do zero</div>
+        <h2>O zero precisa explicar sua causa</h2>
+      </div>
+      <table>
+        <thead><tr><th>Código</th><th>Diagnóstico</th></tr></thead>
+        <tbody>
+          <tr><td>D₀</td><td>Causa ainda não classificada.</td></tr>
+          <tr><td>D₁</td><td>Ausência de dados.</td></tr>
+          <tr><td>D₂</td><td>Dados insuficientes.</td></tr>
+          <tr><td>D₃</td><td>Dados conflitantes.</td></tr>
+          <tr><td>D₄</td><td>Proposição ambígua, mal formulada ou semanticamente inadequada.</td></tr>
+          <tr><td>D₅</td><td>Dependência de condição ainda não resolvida.</td></tr>
+        </tbody>
+      </table>
+      <div class="formula">Resposta completa: <strong>R(φ) = valor + diagnóstico + explicação</strong></div>
+    </section>
+
+    <section id="evidencias">
+      <div class="section-head">
+        <div class="kicker">4. Mecanismo de evidências</div>
+        <h2>Média ponderada, cobertura e conflito</h2>
+        <p class="lead">As resultantes positivas e negativas são agregadas por média ponderada, evitando que grande quantidade de evidências fracas domine artificialmente poucas evidências fortes.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Peso de cada evidência</h3>
+          <p>O peso total pode considerar qualidade, confiabilidade, independência, atualidade, pertinência e consistência.</p>
+          <div class="formula">peso = qualidade × confiabilidade × independência × atualidade × pertinência × consistência</div>
+        </div>
+        <div class="card">
+          <h3>Média ponderada</h3>
+          <div class="formula">
+            <span class="num">w₁x₁ + w₂x₂ + ... + wₙxₙ</span>
+            <span class="bar"></span>
+            <span class="den">w₁ + w₂ + ... + wₙ</span>
+          </div>
+          <p>O mesmo procedimento é aplicado separadamente às evidências favoráveis e contrárias.</p>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:18px">
+        <div class="card"><h3>M⁺</h3><p>Média ponderada das evidências favoráveis.</p></div>
+        <div class="card"><h3>M⁻</h3><p>Média ponderada dos módulos das evidências contrárias.</p></div>
+        <div class="card"><h3>Cobertura</h3><p>Mede abrangência, diversidade de métodos, independência e completude da investigação.</p></div>
+      </div>
+      <div class="formula">E⁺ = M⁺ × C⁺ &nbsp;&nbsp;&nbsp; e &nbsp;&nbsp;&nbsp; E⁻ = M⁻ × C⁻</div>
+      <div class="formula">Resultante primária: <strong>R = E⁺ − E⁻</strong></div>
+      <div class="formula">
+        Índice de conflito K =
+        <span class="num">2 × menor valor entre E⁺ e E⁻</span>
+        <span class="bar"></span>
+        <span class="den">E⁺ + E⁻</span>
+      </div>
+    </section>
+
+    <section id="conectivos">
+      <div class="section-head">
+        <div class="kicker">5. Conectivos lógicos</div>
+        <h2>Operações graduadas e prudentes</h2>
+      </div>
+      <table>
+        <thead><tr><th>Operação</th><th>Regra inicial</th><th>Interpretação</th></tr></thead>
+        <tbody>
+          <tr><td>Negação</td><td>v(¬φ) = −v(φ)</td><td>Inverte a direção e preserva a magnitude.</td></tr>
+          <tr><td>Conjunção</td><td>mínimo entre os valores</td><td>A conclusão conjunta não supera a premissa mais fraca.</td></tr>
+          <tr><td>Disjunção</td><td>máximo entre os valores</td><td>A alternativa mais sustentada prevalece.</td></tr>
+          <tr><td>Implicação</td><td>força limitada pela premissa e pela regra</td><td>Evita amplificação indevida.</td></tr>
+          <tr><td>Equivalência</td><td>baseada na proximidade entre os valores</td><td>Quanto mais semelhantes as avaliações, maior a equivalência.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">Essas operações constituem a primeira versão operacional. Elas deverão ser validadas por testes formais e experimentais.</div>
+    </section>
+
+    <section id="inferencia">
+      <div class="section-head">
+        <div class="kicker">6. Regras de inferência</div>
+        <h2>Conclusões nunca mais fortes que suas bases</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><div><strong>Identidade</strong><br>Uma proposição preserva seu valor enquanto contexto e evidências não mudarem.</div></div>
+        <div class="step"><div><strong>Negação</strong><br>O valor muda apenas de sinal.</div></div>
+        <div class="step"><div><strong>Modus ponens graduado</strong><br>A força da conclusão é limitada pelo menor valor entre a premissa e a implicação.</div></div>
+        <div class="step"><div><strong>Bloqueio por zero</strong><br>Uma premissa indeterminada não autoriza uma conclusão afirmativa ou negativa.</div></div>
+        <div class="step"><div><strong>Não amplificação</strong><br>Nenhuma conclusão derivada supera a premissa ou regra essencial mais fraca.</div></div>
+        <div class="step"><div><strong>Contradição não explosiva</strong><br>De φ e ¬φ não se conclui qualquer proposição arbitrária.</div></div>
+        <div class="step"><div><strong>Revisabilidade</strong><br>Novas evidências podem fortalecer, enfraquecer ou inverter uma conclusão.</div></div>
+      </div>
+    </section>
+
+    <section id="decisao">
+      <div class="section-head">
+        <div class="kicker">7. Valor lógico e decisão prática</div>
+        <h2>A lógica informa; a política decide</h2>
+        <p class="lead">Um valor positivo ou negativo não autoriza automaticamente uma ação. A decisão depende também de suficiência, conflito, risco, custo, reversibilidade e regras do domínio.</p>
+      </div>
+      <div class="decision-flow">
+        <span class="pill">Evidências</span><span class="arrow">→</span>
+        <span class="pill">Médias ponderadas</span><span class="arrow">→</span>
+        <span class="pill">Cobertura</span><span class="arrow">→</span>
+        <span class="pill">Conflito</span><span class="arrow">→</span>
+        <span class="pill">Valor trinário</span><span class="arrow">→</span>
+        <span class="pill">Política decisória</span><span class="arrow">→</span>
+        <span class="pill">Ação ou suspensão</span>
+      </div>
+      <div class="grid-3" style="margin-top:22px">
+        <div class="card"><h3>Aprovar</h3><p>Valor positivo suficiente, cobertura adequada, conflito aceitável e risco controlado.</p></div>
+        <div class="card"><h3>Rejeitar</h3><p>Valor negativo suficiente, cobertura adequada, conflito aceitável e política autorizadora.</p></div>
+        <div class="card"><h3>Suspender</h3><p>Valor próximo de zero, baixa cobertura, conflito elevado, ambiguidade ou condição pendente.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">8. Exemplo completo</div>
+        <h2>“O equipamento pode operar com segurança.”</h2>
+      </div>
+      <div class="example">
+        <p><strong>Média positiva:</strong> 0,813</p>
+        <p><strong>Cobertura positiva:</strong> 0,85</p>
+        <p><strong>Suporte efetivo positivo:</strong> 0,691</p>
+        <p><strong>Média negativa:</strong> 0,509</p>
+        <p><strong>Cobertura negativa:</strong> 0,45</p>
+        <p><strong>Suporte efetivo negativo:</strong> 0,229</p>
+        <p><strong>Resultante:</strong> 0,462</p>
+        <p><strong>Suficiência conservadora:</strong> 0,65</p>
+        <p><strong>Valor final:</strong> +0,30</p>
+        <p><strong>Conflito:</strong> aproximadamente 0,50</p>
+        <p><strong>Decisão:</strong> não liberar automaticamente; investigar a vibração e repetir o teste.</p>
+      </div>
+    </section>
+
+    <section id="aplicacoes">
+      <div class="section-head">
+        <div class="kicker">9. Aplicações práticas</div>
+        <h2>Onde o método pode superar a decisão binária</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card"><h3>Inteligência Artificial</h3><p>Permite declarar insuficiência, conflito e necessidade de novos dados em vez de inventar respostas.</p></div>
+        <div class="card"><h3>Medicina</h3><p>Separa evidência de diagnóstico, cobertura de exames, conflito clínico e decisão terapêutica.</p></div>
+        <div class="card"><h3>Direito</h3><p>Distingue prova favorável, prova contrária, insuficiência, conflito e limiares de decisão.</p></div>
+        <div class="card"><h3>Robótica</h3><p>Integra sensores com confiabilidades diferentes e evita ações quando a informação é inconsistente.</p></div>
+        <div class="card"><h3>Banco de dados</h3><p>Representa ausência de informação sem convertê-la automaticamente em falsidade.</p></div>
+        <div class="card"><h3>Ciência</h3><p>Formaliza hipóteses revisáveis, força das evidências, conflito experimental e suspensão de conclusão.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">10. Requisitos já fechados</div>
+        <h2>Núcleo lógico-operacional consolidado</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Definições concluídas</h3>
+          <p>Escala, significado do zero, contexto, diagnósticos, média ponderada, cobertura, conflito, conectivos, inferência, atualização, decisão e explicabilidade.</p>
+        </div>
+        <div class="card">
+          <h3>Próxima etapa técnica</h3>
+          <p>Implementar o núcleo computacional, criar casos de teste, comparar com decisões binárias e medir estabilidade, precisão, utilidade e comportamento diante de novas evidências.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <div class="signature">Autoria: Arthur Braga Padilha</div>
+        <div>Método Trinário — apresentação formal consolidada</div>
+      </div>
+      <div>18 de julho de 2026</div>
+    </footer>
+  </main>
+
+  <button class="print-btn" onclick="window.print()">Imprimir / PDF</button>
+</body>
+</html>
